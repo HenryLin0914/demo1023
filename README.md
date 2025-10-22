@@ -129,5 +129,6 @@ const result = await mcpGitHub.createCommit({
 ## 🔗 相關連結
 
 - [GitHub 倉庫](https://github.com/HenryLin0914/demo1023)
-- [MCP GitHub 工具文檔](https://github.com/modelcontextprotocol/servers/tree/main/src/github)
+- [GitHub Actions 文檔](https://docs.github.com/en/actions)
 - [Git 官方文檔](https://git-scm.com/doc)
+- [Node.js Git 自動化](https://github.com/steveukx/git-js)

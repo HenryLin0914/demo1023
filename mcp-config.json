@@ -1,0 +1,39 @@
+{
+  "mcp": {
+    "servers": {
+      "github": {
+        "command": "npx",
+        "args": [
+          "@modelcontextprotocol/server-github"
+        ],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "your_github_token_here"
+        }
+      },
+      "git-workflow": {
+        "command": "node",
+        "args": [
+          "mcp-git-workflow.js"
+        ]
+      }
+    }
+  },
+  "git": {
+    "repository": "HenryLin0914/demo1023",
+    "branch": "main",
+    "autoPush": true,
+    "checkInterval": 30000,
+    "commitMessage": {
+      "template": "Auto commit via MCP: {timestamp}",
+      "includeFiles": true,
+      "includeStats": true
+    }
+  },
+  "features": {
+    "autoCommit": true,
+    "autoPush": true,
+    "smartMessages": true,
+    "fileAnalysis": true,
+    "errorHandling": true
+  }
+}
