@@ -13,14 +13,49 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 150, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 0, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(45deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 255, 0.03) 2px,
+                    rgba(0, 255, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 150, 0.03) 2px,
+                    rgba(0, 255, 150, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .header {
@@ -32,12 +67,37 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 
+                0 0 10px rgba(0, 255, 255, 0.5),
+                0 0 20px rgba(0, 255, 255, 0.3),
+                0 0 30px rgba(0, 255, 255, 0.1);
+            background: linear-gradient(45deg, #00ffff, #00ff96, #ff00ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
+            color: #a0a0a0;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 
+                    0 0 10px rgba(0, 255, 255, 0.5),
+                    0 0 20px rgba(0, 255, 255, 0.3),
+                    0 0 30px rgba(0, 255, 255, 0.1);
+            }
+            to {
+                text-shadow: 
+                    0 0 20px rgba(0, 255, 255, 0.8),
+                    0 0 30px rgba(0, 255, 255, 0.5),
+                    0 0 40px rgba(0, 255, 255, 0.3);
+            }
         }
 
         .cards-container {
@@ -48,10 +108,15 @@
         }
 
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
             border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 0;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(0, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -65,69 +130,162 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #00ffff, #00ff96, #ff00ff);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(0, 255, 255, 0.3),
+                0 0 50px rgba(0, 255, 150, 0.2);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .card-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 255, 150, 0.1) 50%, rgba(255, 0, 255, 0.1) 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ffff;
+            font-size: 3rem;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-thumbnail .default-icon {
+            opacity: 0.8;
+        }
+
+        .card-preview {
+            width: 100%;
+            height: 200px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.5);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+
+        .card-preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+            backdrop-filter: blur(2px);
+        }
+
+        .preview-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .preview-loading .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e0e0e0;
+            border-top: 2px solid #667eea;
+            margin-right: 8px;
+        }
+
+        .card-content {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .card-title {
             font-size: 1.4rem;
-            color: #333;
+            color: #00ffff;
             margin-bottom: 10px;
             font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .card-description {
-            color: #666;
+            color: #a0a0a0;
             margin-bottom: 15px;
             line-height: 1.5;
         }
 
         .card-path {
             font-size: 0.9rem;
-            color: #999;
+            color: #00ff96;
             font-family: 'Courier New', monospace;
-            background: #f5f5f5;
+            background: rgba(0, 255, 150, 0.1);
+            border: 1px solid rgba(0, 255, 150, 0.3);
             padding: 5px 10px;
             border-radius: 5px;
             display: inline-block;
+            text-shadow: 0 0 5px rgba(0, 255, 150, 0.3);
         }
 
         .status {
             text-align: center;
-            color: white;
+            color: #00ffff;
             margin-top: 20px;
             font-size: 0.9rem;
             opacity: 0.8;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
         }
 
-        .loading {
-            display: none;
+        .digital-clock {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ffff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
             z-index: 1000;
             backdrop-filter: blur(10px);
+            font-family: 'Courier New', monospace;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.3);
         }
 
-        .spinner {
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top: 2px solid white;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 8px;
-            vertical-align: middle;
+        .digital-clock .time {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .digital-clock .date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            color: #00ff96;
+            text-shadow: 0 0 5px rgba(0, 255, 150, 0.5);
         }
 
         @keyframes spin {
@@ -161,9 +319,9 @@
             <p>自動掃描專案目錄中的HTML檔案</p>
         </div>
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            正在掃描專案檔案...
+        <div class="digital-clock" id="digitalClock">
+            <div class="time" id="currentTime">--:--:--</div>
+            <div class="date" id="currentDate">----/--/--</div>
         </div>
 
         <div class="cards-container" id="cardsContainer">
@@ -178,14 +336,37 @@
     <script>
         let scanInterval;
 
+        // 更新數位時鐘
+        function updateDigitalClock() {
+            const now = new Date();
+            const timeElement = document.getElementById('currentTime');
+            const dateElement = document.getElementById('currentDate');
+            
+            if (timeElement && dateElement) {
+                // 格式化時間 (HH:MM:SS)
+                const time = now.toLocaleTimeString('zh-TW', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                // 格式化日期 (YYYY/MM/DD)
+                const date = now.toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }).replace(/\//g, '/');
+                
+                timeElement.textContent = time;
+                dateElement.textContent = date;
+            }
+        }
+
         // 掃描專案目錄中的index.html檔案
         async function scanProjects() {
-            const loading = document.getElementById('loading');
             const cardsContainer = document.getElementById('cardsContainer');
             const lastUpdate = document.getElementById('lastUpdate');
-            const nextScan = document.getElementById('nextScan');
-
-            loading.style.display = 'block';
             
             try {
                 // 模擬掃描過程（實際應用中這裡會是API調用）
@@ -201,7 +382,10 @@
                         name: 'Henry專案',
                         description: 'Henry的個人專案頁面',
                         path: './Henry/index.html',
-                        lastModified: '2024-10-22'
+                        lastModified: '2024-10-22',
+                        thumbnail: null, // 可以設定縮圖路徑
+                        icon: '👨‍💻', // 預設圖示
+                        preview: true // 是否啟用預覽功能
                     }
                 ];
 
@@ -222,13 +406,47 @@
                         card.className = 'card';
                         card.onclick = () => window.open(project.path, '_blank');
                         
+                        // 生成預覽或縮圖HTML
+                        let previewHtml = '';
+                        if (project.preview) {
+                            // 使用預覽功能
+                            previewHtml = `
+                                <div class="card-preview" id="preview-${project.name.replace(/\s+/g, '-')}">
+                                    <div class="preview-loading">
+                                        <div class="spinner"></div>
+                                        載入預覽中...
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // 使用縮圖功能
+                            const thumbnailHtml = project.thumbnail 
+                                ? `<img src="${project.thumbnail}" alt="${project.name} 縮圖" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                   <div class="default-icon" style="display: none;">${project.icon}</div>`
+                                : `<div class="default-icon">${project.icon}</div>`;
+                            
+                            previewHtml = `
+                                <div class="card-thumbnail">
+                                    ${thumbnailHtml}
+                                </div>
+                            `;
+                        }
+                        
                         card.innerHTML = `
-                            <div class="card-title">${project.name}</div>
-                            <div class="card-description">${project.description}</div>
-                            <div class="card-path">${project.path}</div>
+                            ${previewHtml}
+                            <div class="card-content">
+                                <div class="card-title">${project.name}</div>
+                                <div class="card-description">${project.description}</div>
+                                <div class="card-path">${project.path}</div>
+                            </div>
                         `;
                         
                         cardsContainer.appendChild(card);
+                        
+                        // 如果啟用預覽功能，載入預覽內容
+                        if (project.preview) {
+                            loadPreview(project);
+                        }
                     });
                 }
 
@@ -241,11 +459,47 @@
                         <p>無法掃描專案目錄，請檢查檔案權限</p>
                     </div>
                 `;
-            } finally {
-                loading.style.display = 'none';
             }
         }
 
+
+        // 載入預覽內容
+        function loadPreview(project) {
+            const previewId = `preview-${project.name.replace(/\s+/g, '-')}`;
+            const previewElement = document.getElementById(previewId);
+            
+            if (!previewElement) return;
+            
+            // 建立iframe來載入HTML預覽
+            const iframe = document.createElement('iframe');
+            iframe.src = project.path;
+            iframe.style.display = 'none';
+            
+            iframe.onload = function() {
+                // 隱藏載入動畫，顯示iframe
+                const loadingElement = previewElement.querySelector('.preview-loading');
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                iframe.style.display = 'block';
+                
+                // 添加預覽遮罩
+                const overlay = document.createElement('div');
+                overlay.className = 'card-preview-overlay';
+                overlay.innerHTML = '點擊查看完整頁面';
+                previewElement.appendChild(overlay);
+            };
+            
+            iframe.onerror = function() {
+                // 載入失敗，顯示錯誤訊息
+                const loadingElement = previewElement.querySelector('.preview-loading');
+                if (loadingElement) {
+                    loadingElement.innerHTML = '❌ 預覽載入失敗';
+                }
+            };
+            
+            previewElement.appendChild(iframe);
+        }
 
         // 開始自動掃描
         function startAutoScan() {
@@ -258,6 +512,15 @@
             }, 5000);
         }
 
+        // 開始數位時鐘
+        function startDigitalClock() {
+            // 立即更新一次時間
+            updateDigitalClock();
+            
+            // 每秒更新時間
+            setInterval(updateDigitalClock, 1000);
+        }
+
         // 停止自動掃描
         function stopAutoScan() {
             if (scanInterval) {
@@ -266,9 +529,10 @@
             }
         }
 
-        // 頁面載入完成後開始掃描
+        // 頁面載入完成後開始掃描和時鐘
         document.addEventListener('DOMContentLoaded', () => {
             startAutoScan();
+            startDigitalClock();
         });
 
         // 頁面卸載時停止掃描

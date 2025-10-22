@@ -1,0 +1,19 @@
+{
+  "name": "auto-github-commit",
+  "version": "1.0.0",
+  "description": "自動 GitHub commit & push 工具",
+  "main": "auto-commit.js",
+  "scripts": {
+    "start": "node auto-commit.js start",
+    "stop": "node auto-commit.js stop",
+    "commit": "node auto-commit.js commit",
+    "status": "node auto-commit.js status",
+    "dev": "node auto-commit.js start"
+  },
+  "keywords": ["git", "github", "automation", "commit", "push"],
+  "author": "Henry",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
