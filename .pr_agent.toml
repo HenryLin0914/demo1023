@@ -5,10 +5,10 @@ fallback_models = ["gpt-4o-mini-2024-07-18", "gpt-4o-mini"]
 language = "zh-TW"
 
 [pr_description]
-extra_instructions = "請使用繁體中文進行描述"
+extra_instructions = "Answer in Traditional Chinese"
 
 [pr_reviewer]
-extra_instructions = "請使用繁體中文進行程式碼審查和評論"
+extra_instructions = "Answer in Traditional Chinese"
 
 [pr_code_suggestions]
-extra_instructions = "請使用繁體中文提供程式碼建議"
+extra_instructions = "Answer in Traditional Chinese"
