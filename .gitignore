@@ -30,7 +30,7 @@ Thumbs.db
 *.tar.gz
 
 # 歷史記錄
-.history
+.history/*.*
 
 # 環境變數檔案
 .env
