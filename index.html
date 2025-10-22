@@ -737,23 +737,123 @@
             }, 1000);
         }
 
-        function loadProjectFiles(projectPath, container) {
-            // 模擬檔案列表（實際應用中會從後端API獲取）
+        async function loadProjectFiles(projectPath, container) {
+            try {
+                // 使用瀏覽器的 File System Access API
+                await loadFilesFromLocal(projectPath, container, projectPath);
+            } catch (error) {
+                console.error('讀取檔案失敗:', error);
+                // 顯示錯誤訊息
+                container.innerHTML = `
+                    <div style="text-align: center; color: #ff6666; padding: 40px;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">❌</div>
+                        <h3>無法讀取檔案</h3>
+                        <p>請選擇專案目錄來瀏覽檔案</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7;">錯誤: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadFilesFromLocal(directoryPath, container, projectPath) {
+            try {
+                // 檢查是否支援 File System Access API
+                if ('showDirectoryPicker' in window) {
+                    // 顯示目錄選擇對話框
+                    const dirHandle = await window.showDirectoryPicker({
+                        mode: 'read'
+                    });
+                    
+                    const files = [];
+                    
+                    // 讀取目錄內容
+                    for await (const [name, handle] of dirHandle.entries()) {
+                        const file = {
+                            name: name,
+                            type: handle.kind === 'directory' ? 'folder' : getFileType(name),
+                            size: handle.kind === 'directory' ? '資料夾' : '未知',
+                            icon: getFileIcon(name, handle.kind === 'directory'),
+                            handle: handle,
+                            isDirectory: handle.kind === 'directory'
+                        };
+                        files.push(file);
+                    }
+                    
+                    displayFiles(files, container, projectPath);
+                } else {
+                    // 如果不支援 File System Access API，顯示替代方案
+                    container.innerHTML = `
+                        <div style="text-align: center; color: #00ffff; padding: 40px;">
+                            <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
+                            <h3>瀏覽器不支援檔案存取</h3>
+                            <p>您的瀏覽器不支援 File System Access API</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">請使用 Chrome 86+ 或 Edge 86+ 瀏覽器</p>
+                            <div style="margin-top: 20px;">
+                                <button onclick="showMockFiles()" style="
+                                    background: rgba(0, 255, 255, 0.2);
+                                    border: 1px solid rgba(0, 255, 255, 0.5);
+                                    color: #00ffff;
+                                    padding: 10px 20px;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                ">顯示範例檔案</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    // 用戶取消了選擇
+                    container.innerHTML = `
+                        <div style="text-align: center; color: #a0a0a0; padding: 40px;">
+                            <div style="font-size: 3rem; margin-bottom: 20px;">👆</div>
+                            <h3>已取消選擇</h3>
+                            <p>請重新點擊 "📁 檔案" 按鈕選擇目錄</p>
+                        </div>
+                    `;
+                } else {
+                    console.error('讀取本地檔案失敗:', error);
+                    container.innerHTML = `
+                        <div style="text-align: center; color: #ff6666; padding: 40px;">
+                            <div style="font-size: 3rem; margin-bottom: 20px;">❌</div>
+                            <h3>讀取檔案失敗</h3>
+                            <p>無法讀取目錄</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">錯誤: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // 顯示範例檔案（當瀏覽器不支援時）
+        function showMockFiles() {
+            const container = document.getElementById('explorerBody');
             const mockFiles = [
-                { name: 'index.html', type: 'html', size: '2.3 KB', icon: '🌐' },
-                { name: 'style.css', type: 'css', size: '1.8 KB', icon: '🎨' },
-                { name: 'script.js', type: 'js', size: '3.2 KB', icon: '⚡' },
-                { name: 'images/', type: 'folder', size: '12 MB', icon: '📁' },
-                { name: 'README.md', type: 'md', size: '856 B', icon: '📝' },
-                { name: 'config.json', type: 'json', size: '234 B', icon: '⚙️' },
-                { name: 'package.json', type: 'json', size: '445 B', icon: '📦' },
-                { name: 'assets/', type: 'folder', size: '5.7 MB', icon: '📁' }
+                { name: 'index.html', type: 'html', size: '2.3 KB', icon: '🌐', isDirectory: false },
+                { name: 'style.css', type: 'css', size: '1.8 KB', icon: '🎨', isDirectory: false },
+                { name: 'script.js', type: 'js', size: '3.2 KB', icon: '⚡', isDirectory: false },
+                { name: 'images/', type: 'folder', size: '12 MB', icon: '📁', isDirectory: true },
+                { name: 'README.md', type: 'md', size: '856 B', icon: '📝', isDirectory: false },
+                { name: 'config.json', type: 'json', size: '234 B', icon: '⚙️', isDirectory: false },
+                { name: 'package.json', type: 'json', size: '445 B', icon: '📦', isDirectory: false },
+                { name: 'assets/', type: 'folder', size: '5.7 MB', icon: '📁', isDirectory: true }
             ];
             
+            displayFiles(mockFiles, container, '');
+        }
+
+        function displayFiles(files, container, projectPath) {
             const fileList = document.createElement('div');
             fileList.className = 'file-list';
             
-            mockFiles.forEach(file => {
+            // 排序：資料夾在前，檔案在後
+            files.sort((a, b) => {
+                if (a.type === 'folder' && b.type !== 'folder') return -1;
+                if (a.type !== 'folder' && b.type === 'folder') return 1;
+                return a.name.localeCompare(b.name);
+            });
+            
+            files.forEach(file => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
                 fileItem.onclick = () => handleFileClick(file, projectPath);
@@ -772,15 +872,93 @@
             container.appendChild(fileList);
         }
 
-        function handleFileClick(file, projectPath) {
-            if (file.type === 'folder') {
-                // 如果是資料夾，可以實現進入資料夾功能
+        function getFileType(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const typeMap = {
+                'html': 'html',
+                'htm': 'html',
+                'css': 'css',
+                'js': 'js',
+                'json': 'json',
+                'md': 'md',
+                'txt': 'text',
+                'png': 'image',
+                'jpg': 'image',
+                'jpeg': 'image',
+                'gif': 'image',
+                'svg': 'image',
+                'pdf': 'pdf',
+                'zip': 'archive',
+                'rar': 'archive'
+            };
+            return typeMap[ext] || 'file';
+        }
+
+        function getFileIcon(filename, isDirectory) {
+            if (isDirectory) return '📁';
+            
+            const ext = filename.split('.').pop().toLowerCase();
+            const iconMap = {
+                'html': '🌐',
+                'htm': '🌐',
+                'css': '🎨',
+                'js': '⚡',
+                'json': '⚙️',
+                'md': '📝',
+                'txt': '📄',
+                'png': '🖼️',
+                'jpg': '🖼️',
+                'jpeg': '🖼️',
+                'gif': '🖼️',
+                'svg': '🖼️',
+                'pdf': '📄',
+                'zip': '📦',
+                'rar': '📦'
+            };
+            return iconMap[ext] || '📄';
+        }
+
+        async function handleFileClick(file, projectPath) {
+            if (file.isDirectory) {
+                // 如果是資料夾，進入資料夾
                 console.log(`進入資料夾: ${file.name}`);
-                // 這裡可以實現遞迴載入子資料夾
+                try {
+                    const files = [];
+                    for await (const [name, handle] of file.handle.entries()) {
+                        const subFile = {
+                            name: name,
+                            type: handle.kind === 'directory' ? 'folder' : getFileType(name),
+                            size: handle.kind === 'directory' ? '資料夾' : '未知',
+                            icon: getFileIcon(name, handle.kind === 'directory'),
+                            handle: handle,
+                            isDirectory: handle.kind === 'directory'
+                        };
+                        files.push(subFile);
+                    }
+                    
+                    const container = document.getElementById('explorerBody');
+                    displayFiles(files, container, projectPath);
+                } catch (error) {
+                    console.error('進入資料夾失敗:', error);
+                }
             } else {
-                // 如果是檔案，開啟檔案
-                const filePath = projectPath.replace('index.html', file.name);
-                window.open(filePath, '_blank');
+                // 如果是檔案，嘗試開啟檔案
+                try {
+                    if (file.handle && file.handle.getFile) {
+                        // 使用 File System Access API 開啟檔案
+                        const fileObj = await file.handle.getFile();
+                        const url = URL.createObjectURL(fileObj);
+                        window.open(url, '_blank');
+                    } else {
+                        // 回退到傳統方式
+                        const filePath = projectPath.replace('index.html', file.name);
+                        window.open(filePath, '_blank');
+                    }
+                } catch (error) {
+                    console.error('開啟檔案失敗:', error);
+                    // 顯示錯誤訊息
+                    alert(`無法開啟檔案: ${file.name}\n錯誤: ${error.message}`);
+                }
             }
         }
 

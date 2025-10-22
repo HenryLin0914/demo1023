@@ -8,12 +8,18 @@
     "stop": "node auto-commit.js stop",
     "commit": "node auto-commit.js commit",
     "status": "node auto-commit.js status",
-    "dev": "node auto-commit.js start"
+    "dev": "node auto-commit.js start",
+    "server": "node server.js",
+    "serve": "node server.js"
   },
-  "keywords": ["git", "github", "automation", "commit", "push"],
+  "keywords": ["git", "github", "automation", "commit", "push", "file-explorer"],
   "author": "Henry",
   "license": "MIT",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
   }
 }
