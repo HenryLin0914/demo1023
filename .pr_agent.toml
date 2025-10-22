@@ -1,0 +1,14 @@
+[config]
+model = "gpt-4o-mini-2024-07-18"
+model_turbo = "gpt-4o-mini-2024-07-18"
+fallback_models = ["gpt-4o-mini-2024-07-18", "gpt-4o-mini"]
+language = "zh-TW"
+
+[pr_description]
+extra_instructions = "請使用繁體中文進行描述"
+
+[pr_reviewer]
+extra_instructions = "請使用繁體中文進行程式碼審查和評論"
+
+[pr_code_suggestions]
+extra_instructions = "請使用繁體中文提供程式碼建議"
