@@ -62,3 +62,9 @@ coverage/
 *.pid
 *.seed
 *.pid.lock
+
+#環境
+venv/*
+.venv/*
+*.csv
+*.png
