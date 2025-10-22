@@ -1,0 +1,64 @@
+# 系統檔案
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 編輯器設定
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 暫存檔案
+*.tmp
+*.temp
+*.log
+
+# 備份檔案
+*.bak
+*.backup
+
+# 壓縮檔案
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# 歷史記錄
+.history/
+
+# 環境變數檔案
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 依賴目錄
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 建置輸出
+dist/
+build/
+out/
+
+# 快取
+.cache/
+.parcel-cache/
+
+# 測試覆蓋率
+coverage/
+.nyc_output/
+
+# 其他
+*.pid
+*.seed
+*.pid.lock
